@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <Header />
-  </div>
+    <div class="w-full h-screen bg-[url('/head.png')]">
+       <h1>Head</h1>
+    </div>
 </template>
 
 <script setup>
-import Header from '../components/home/Header.vue';
-
-
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>
