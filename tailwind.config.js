@@ -6,7 +6,11 @@ export default {
       center: true,
       padding: "20px",
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        img: "url('/head.png')",
+      },
+    },
   },
   plugins: [],
 };

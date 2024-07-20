@@ -27,6 +27,41 @@ const router = createRouter({
       ],
     },
 
+    {
+      path: "/auth/admin",
+      name: "admin-login",
+      component: () => import("../pages/auth/admin-auth.vue"),
+    },
+
+    {
+      path: "/dashboard",
+      name: "admin-dashboard",
+      redirect: "/dashboard/home",
+      component: () => import("../pages/admin-dashboard.vue"),
+      children: [
+        {
+          path: "/dashboard/home",
+          name: "home",
+          component: () => import("../views/HomeView.vue"),
+        },
+
+        {
+          path: "/dashboard/admins",
+          name: "admin-list",
+          component: () => import("../views/AdminView.vue"),
+        },
+        {
+          path: "/dashboard/orders",
+          name: "order-list",
+          component: () => import("../views/OrdersView.vue"),
+        },
+        {
+          path: "/dashboard/drivers",
+          name: "driver-list",
+          component: () => import("../views/DriversView.vue"),
+        },
+      ],
+    },
     // {
     //   path: "/",
     //   component: () => import("../layout/authLayout.vue"),
@@ -60,5 +95,17 @@ const router = createRouter({
 //     return { name: "login" };
 //   }
 // });
+
+router.beforeEach((to, from, next) => {
+  const isAdminAuthenticated = JSON.parse(
+    localStorage.getItem("isAdminAuthenticated")
+  );
+
+  if (to.path.startsWith("/dashboard") && !isAdminAuthenticated) {
+    next({ name: "admin-login" });
+  } else {
+    next();
+  }
+});
 
 export default router;

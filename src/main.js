@@ -3,6 +3,7 @@ import "./style.css";
 import App from "./App.vue";
 
 import router from "./router";
+import "@flaticon/flaticon-uicons/css/all/all.css";
 
 const app = createApp(App);
 
