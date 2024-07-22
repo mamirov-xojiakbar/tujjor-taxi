@@ -27,22 +27,33 @@ const router = createRouter({
       ],
     },
 
-    // {
-    //   path: "/",
-    //   component: () => import("../layout/authLayout.vue"),
-    //   children: [
-    //     {
-    //       path: "/login",
-    //       name: "login",
-    //       component: () => import("../pages/auth/signIn.vue"),
-    //     },
-    //     {
-    //       path: "/signup",
-    //       name: "signup",
-    //       component: () => import("../pages/auth/signUp.vue"),
-    //     },
-    //   ],
-    // },
+    {
+      path: "/",
+      component: () => import("../layout/auth.vue"),
+      children: [
+        {
+          path: "/login",
+          name: "login",
+          component: () => import("../pages/auth/signIn.vue"),
+        },
+        {
+          path: "/signup",
+          name: "signup",
+          component: () => import("../pages/auth/signUp.vue"),
+        },
+
+        {
+          path: "/loginDriver",
+          name: "loginDriver",
+          component: () => import("../pages/driverAuth/signInDriver.vue"),
+        },
+        {
+          path: "/signupDriver",
+          name: "signupDriver",
+          component: () => import("../pages/driverAuth/signUpDriver.vue"),
+        },
+      ],
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
