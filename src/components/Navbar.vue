@@ -1,10 +1,10 @@
 <template>
   <div class="bg-[#F7931E] fixed w-full z-50"> 
     <div class="container mx-auto py-6 flex justify-between items-center">
-      <h1 class="text-4xl font-bold leading-tight text-white">Logo</h1>
+      <h1 class="text-4xl font-bold leading-tight text-black">Logo</h1>
       <div class="flex items-center gap-8 text-white text-lg font-medium">
-        <router-link to="#">Biz haqimizda</router-link>
-        <router-link to="#">Savol/javob</router-link>
+        <router-link to="#" class="md:block hidden">{{ aboutUsText }}</router-link>
+        <router-link to="#" class="md:block hidden">{{ faqText }}</router-link>
         <div class="flex gap-3 items-center">
           <div 
             :class="{
@@ -12,7 +12,7 @@
               'bg-green-500': isToggled,
               'w-[50px] h-[28px] rounded-[13.5px] p-[1px] relative cursor-pointer': true
             }" 
-            @click="toggleSwitch"
+            @click="toggleLanguage"
           >
             <div 
               :class="{
@@ -22,7 +22,8 @@
               }"
             ></div>
           </div>
-          <p>{{ leng }}</p>
+          <p class="md:block hidden">Русский</p>
+          <p class="md:hidden block">Рус</p>
         </div> 
         <router-link to="#">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512">
@@ -35,15 +36,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useLanguageStore } from '../store/languageStore';
 
-const isToggled = ref(false);
-const leng = ref("Русский");
+const languageStore = useLanguageStore();
 
-const toggleSwitch = () => {
-  isToggled.value = !isToggled.value;
-  leng.value = isToggled.value ? "O’zbekcha" : "Русский";
+const isToggled = computed(() => languageStore.isRussian);
+
+
+const toggleLanguage = () => {
+  languageStore.toggleLanguage();
 };
+
+const aboutUsText = computed(() => (languageStore.isRussian ? "О нас" : "Biz haqimizda"));
+const faqText = computed(() => (languageStore.isRussian ? "Вопрос/Ответ" : "Savol/javob"));
 </script>
 
 <style lang="scss" scoped>
