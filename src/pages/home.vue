@@ -1,10 +1,12 @@
 <template>
-    <div class="w-full h-screen bg-[url('/head.png')]">
-       <h1>Head</h1>
+   
+    <div>
+        <Intro />
     </div>
 </template>
 
 <script setup>
+import Intro from '../components/Intro.vue';
 </script>
 
 <style lang="scss" scoped>
