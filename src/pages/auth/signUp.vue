@@ -27,30 +27,40 @@
         <input
           :disabled="step > 1"
           type="text"
-          class="border-2 border-[#F7931E] md:w-[460px] w-full py-1"
+          class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+          v-model="formData.phone"
+          v-mask="'+998 ## ### ## ##'"
         />
         <div v-if="step == 2">
           <p class="mt-3">Numerizga yuborilgan parol parol</p>
           <input
             type="text"
-            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1"
+            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+            v-model="code"
+            v-mask="'####'"
           />
+          <h2 v-if="isVerifyError" class="text-red-500">
+            Kod xato qaytadan kiriting !!!
+          </h2>
         </div>
         <div v-if="step == 3">
           <p class="mt-3">Ism</p>
           <input
             type="text"
-            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1"
+            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+            v-model="InfoData.name"
           />
           <p class="mt-3">Parol</p>
           <input
             type="text"
-            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1"
+            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+            v-model="InfoData.password"
           />
           <p class="mt-3">Parolni Takrorlang</p>
           <input
             type="text"
-            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1"
+            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+            v-model="InfoData.confirm_password"
           />
         </div>
         <router-link to="/signup">
@@ -71,11 +81,96 @@
 
 <script setup>
 import { ref } from "vue";
-const isDisabled = ref(false);
+import axios from "axios";
+import { useRouter } from "vue-router";
 const step = ref(1);
+const code = ref();
+const isVerifyError = ref(false);
+const formData = ref({
+  phone: "",
+});
+
+const CodeData = ref({
+  otp: "",
+  check: "",
+});
+
+const InfoData = ref({
+  name: "",
+  password: "",
+  confirm_password: "",
+  phone: "",
+});
+
+const router = useRouter();
+
+const responseData = ref(null);
+
+async function submitForm() {
+  try {
+    const result = formData.value.phone.replace(/\s+/g, "");
+    formData.value.phone = result;
+
+    console.log(formData.value.phone);
+    const response = await axios.post(
+      "http://45.130.148.194:7777/api/client/newotp",
+      formData.value
+    );
+    responseData.value = response.data;
+    alert(responseData.value.otp);
+    console.log("responseData", responseData.value);
+    step.value = 2;
+  } catch (error) {
+    console.error("Xato yuz berdi:", error);
+  }
+}
+
+async function submitCode() {
+  try {
+    CodeData.value.check = formData.value.phone;
+    CodeData.value.otp = +code.value;
+    console.log(CodeData.value.otp);
+    console.log(`sdas`, CodeData.value);
+
+    const res = await axios.post(
+      "http://45.130.148.194:7777/api/client/checkOtp",
+      CodeData.value
+    );
+    console.log(`res`, res);
+    step.value = 3;
+  } catch (error) {
+    isVerifyError.value = true;
+
+    console.error("Xato yuz berdi:", error);
+  }
+}
+async function InfoCode() {
+  try {
+    InfoData.value.phone = formData.value.phone;
+
+    const res = await axios.post(
+      "http://45.130.148.194:7777/api/client/register",
+      InfoData.value
+    );
+    router.push({ name: "home" });
+  } catch (error) {
+    console.log(`error`, error);
+  }
+}
+
 const Next = () => {
-  step.value += 1;
+  if (step.value == 1) {
+    submitForm();
+  }
+  if (step.value == 2) {
+    submitCode();
+  }
+  if (step.value == 3) {
+    InfoCode();
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+/* Qo'shimcha uslublar */
+</style>
