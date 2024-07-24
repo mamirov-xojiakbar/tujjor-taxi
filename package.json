@@ -9,6 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.7.2",
+    "vue": "^3.4.29",
+    "vue-router": "^4.4.0",
+    "vue-the-mask": "^0.11.1"
     "@iconify/vue": "^4.1.2",
     "@vuepic/vue-datepicker": "^9.0.1",
     "pinia": "^2.1.7",

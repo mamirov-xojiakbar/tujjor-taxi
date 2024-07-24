@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import "./style.css";
 import App from "./App.vue";
+import VueTheMask from "vue-the-mask";
 import {createPinia} from "pinia"
 import i18n from "./plugins/i18n";
 
@@ -20,6 +21,7 @@ const settings={
 }
 
 const app = createApp(App);
+app.use(VueTheMask);
 const pinia= createPinia()
 
 app.use(i18n);
