@@ -62,6 +62,12 @@
             class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
             v-model="InfoData.confirm_password"
           />
+          <p class="mt-3">Gender</p>
+          <input
+            type="text"
+            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+            v-model="InfoData.gender"
+          />
         </div>
         <router-link to="/signup">
           <button
@@ -105,6 +111,7 @@ const InfoData = ref({
   password: "",
   confirm_password: "",
   phone: "",
+  gender: "",
 });
 
 const router = useRouter();
@@ -118,7 +125,7 @@ async function submitForm() {
 
     console.log(formData.value.phone);
     const response = await axios.post(
-      "http://45.130.148.194:7777/api/client/newotp",
+      "http://45.130.148.194:5050/api/client/newsotp",
       formData.value
     );
     responseData.value = response.data;
@@ -140,7 +147,7 @@ async function submitCode() {
     console.log(`sdas`, CodeData.value);
 
     const res = await axios.post(
-      "http://45.130.148.194:7777/api/client/checkOtp",
+      "http://45.130.148.194:5050/api/client/checkOtp",
       CodeData.value
     );
     console.log(`res`, res);
@@ -158,7 +165,7 @@ async function InfoCode() {
     InfoData.value.phone = result;
 
     const res = await axios.post(
-      "http://45.130.148.194:7777/api/client/register",
+      "http://45.130.148.194:5050/api/client/register",
       InfoData.value
     );
     store.userInfo = res.data.user;
