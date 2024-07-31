@@ -83,6 +83,11 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+
+import { useStore } from "../../store";
+
+const store = useStore();
+
 const step = ref(1);
 const code = ref();
 const isVerifyError = ref(false);
@@ -118,7 +123,7 @@ async function submitForm() {
     );
     responseData.value = response.data;
     alert(responseData.value.otp);
-    console.log("responseData", responseData.value);
+    // console.log("responseData", responseData.value);
     step.value = 2;
   } catch (error) {
     console.error("Xato yuz berdi:", error);
@@ -127,7 +132,9 @@ async function submitForm() {
 
 async function submitCode() {
   try {
-    CodeData.value.check = formData.value.phone;
+    const result = formData.value.phone.replace(/\s+/g, "");
+
+    CodeData.value.check = result;
     CodeData.value.otp = +code.value;
     console.log(CodeData.value.otp);
     console.log(`sdas`, CodeData.value);
@@ -146,12 +153,15 @@ async function submitCode() {
 }
 async function InfoCode() {
   try {
-    InfoData.value.phone = formData.value.phone;
+    const result = formData.value.phone.replace(/\s+/g, "");
+
+    InfoData.value.phone = result;
 
     const res = await axios.post(
       "http://45.130.148.194:7777/api/client/register",
       InfoData.value
     );
+    store.userInfo = res.data.user;
     router.push({ name: "home" });
   } catch (error) {
     console.log(`error`, error);
@@ -169,6 +179,8 @@ const Next = () => {
     InfoCode();
   }
 };
+
+// console.log('gfhjg',store.userInfo);
 </script>
 
 <style scoped>
