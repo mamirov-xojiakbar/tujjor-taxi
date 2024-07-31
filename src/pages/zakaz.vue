@@ -1,13 +1,9 @@
 <template>
-    <div class="pt-[100px]">
-        <h1>Zakaz  page</h1>
-    </div>
+  <div class="pt-[100px]">
+    <h1>Zakaz page</h1>
+  </div>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

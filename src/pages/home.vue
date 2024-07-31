@@ -1,14 +1,11 @@
 <template>
-   
-    <div>
-        <Intro />
-    </div>
+  <div>
+    <Intro />
+  </div>
 </template>
 
 <script setup>
-import Intro from '../components/Intro.vue';
+import Intro from "../components/Intro.vue";
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

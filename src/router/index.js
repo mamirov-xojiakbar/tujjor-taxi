@@ -9,7 +9,7 @@ const router = createRouter({
     //   component: () => import("../pages/not-found.vue"),
     // },
 
-    { 
+    {
       path: "/",
       component: () => import("../layout/default.vue"),
       redirect: "/home",
@@ -18,6 +18,11 @@ const router = createRouter({
           path: "/home",
           name: "home",
           component: () => import("../pages/home.vue"),
+        },
+        {
+          path: "/about",
+          name: "about",
+          component: () => import("../pages/about.vue"),
         },
         {
           path: "/orders",
