@@ -1,4 +1,3 @@
-
 <template>
   <div
     v-if="isDropdownOpen"
@@ -45,7 +44,7 @@
             }"
             class="cursor-pointer p-2 text-sm rounded-md"
           >
-            {{ region.region }}
+            {{ region.name }}
           </p>
         </div>
         <!-- District List -->
@@ -55,37 +54,47 @@
         >
           <p
             @click="
-              setPlaceFromDistrict(regions[selectedRegion].region, district)
+              setPlaceFromDistrict(regions[selectedRegion].name, district.name)
             "
-            v-for="(district, districtIndex) in regions[selectedRegion]
-              .district"
+            v-for="(district, districtIndex) in regions[selectedRegion].districts"
             :key="districtIndex"
             class="p-2 text-sm hover:bg-gray-200 cursor-pointer rounded-md"
           >
-            {{ district }}
+            {{ district.name }}
           </p>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, watch } from "vue";
-import regionsDataJson from "../JSON/region2.json";
 import { useStore } from "../store";
 
 const store = useStore();
 
 const regions = ref([]);
-const selectedRegion = ref(null); // Initialize with null
+const selectedRegion = ref(null);
 const isDropdownOpen = ref(false);
 
-// Load regions data based on store.lang
-const loadRegions = () => {
-  const data = store.lang === "uz" ? regionsDataJson.uz : regionsDataJson.ru;
-  regions.value = data.regions;
-  selectedRegion.value = 0; // Default to the first region
-  store.setPlacePinFrom = "";
+// Load regions data from API
+const loadRegions = async () => {
+  try {
+    const response = await fetch("http://45.130.148.194:5050/api/region");
+    if (!response.ok) {
+      throw new Error("Failed to fetch regions data");
+    }
+    const data = await response.json();
+    regions.value = data.map(region => ({
+      name: region.name,
+      districts: region.districts
+    }));
+    selectedRegion.value = 0;
+    store.setPlacePinFrom = "";
+  } catch (error) {
+    console.error("Error fetching regions data:", error);
+  }
 };
 
 // Watch for changes in store.lang and reload regions accordingly
