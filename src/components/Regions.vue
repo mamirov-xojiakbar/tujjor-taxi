@@ -44,24 +44,21 @@
             }"
             class="cursor-pointer p-2 text-sm rounded-md"
           >
-            {{ region.region }}
+            {{ region.name }}
           </p>
         </div>
         <!-- District List -->
         <div
-          v-if="selectedRegion !== null"
+          v-if="selectedRegion !== null && regions[selectedRegion]"
           class="w-1/2 max-md:w-full max-h-56 max-md:border-t border-t-primary max-md:border-r max-md:border-r-gray-200 overflow-y-auto scrollable-element"
         >
           <p
-            @click="
-              setPlaceFromDistrict(regions[selectedRegion].region, district)
-            "
-            v-for="(district, districtIndex) in regions[selectedRegion]
-              .district"
+            v-for="(district, districtIndex) in regions[selectedRegion].districts"
             :key="districtIndex"
+            @click="setPlaceFromDistrict(regions[selectedRegion].name, district.name)"
             class="p-2 text-sm hover:bg-gray-200 cursor-pointer rounded-md"
           >
-            {{ district }}
+            {{ district.name }}
           </p>
         </div>
       </div>
@@ -70,44 +67,43 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
-import regionsDataJson from "../JSON/region2.json";
+import { ref, watch, onMounted } from "vue";
 import { useStore } from "../store";
+import axios from "axios";
 
 const store = useStore();
-
-// Define reactive variables
 const regions = ref([]);
 const selectedRegion = ref(0);
 const isDropdownOpen = ref(false);
 
-// Load regions data based on store.lang
-const loadRegions = () => {
-  const data = store.lang === "uz" ? regionsDataJson.uz : regionsDataJson.ru;
-  regions.value = data.regions;
-  selectedRegion.value = 0; // Default to the first region
-  store.setPlacePinTo = ""; // Reset place pin in store
+const loadRegions = async () => {
+  try {
+    const response = await axios.get("http://45.130.148.194:5050/api/region");
+    const data = response.data;
+    regions.value = data;
+    selectedRegion.value = 0;
+    store.setPlacePinTo = "";
+  } catch (error) {
+    console.error("Failed to load regions:", error);
+  }
 };
 
-// Toggle dropdown visibility
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };
 
-// Select a region
 const selectRegion = (index) => {
   selectedRegion.value = index;
 };
 
-// Set place from district
 const setPlaceFromDistrict = (region, district) => {
   store.setPlacePinTo = `${region}. ${district}`;
-  console.log("object", store.setPlacePinTo);
   isDropdownOpen.value = false;
 };
 
-// Watch for changes in store.lang and reload regions accordingly
-watch(() => store.lang, loadRegions, { immediate: true });
+onMounted(loadRegions);
+
+watch(() => store.lang, loadRegions);
 </script>
 
 <style scoped>
@@ -116,21 +112,18 @@ watch(() => store.lang, loadRegions, { immediate: true });
   height: 5px;
 }
 
-/* Define the thumb style */
 .scrollable-element::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom right, #f7931e 0%, #f7931e 100%);
   border-radius: 5px;
 }
 
-/* Define the track style */
 .scrollable-element::-webkit-scrollbar-track {
   background-color: transparent;
   border: 1px solid transparent;
 }
 
-/* Define the button style */
 .scrollable-element::-webkit-scrollbar-button {
-  background-color: tr;
+  background-color: transparent;
   border-radius: 5px;
 }
 </style>
