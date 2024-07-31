@@ -93,6 +93,7 @@
           </button>
         </div>
         <Location></Location>
+        <textarea name="text" id="text" class=" border mb-[30%] p-3 border-[#F7931E]"></textarea>
       </div>
     </div>
     <div class="bg-white h-[90px]" style="box-shadow: 0 0 4px 0 gray">
