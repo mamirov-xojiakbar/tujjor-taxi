@@ -62,6 +62,12 @@
             class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
             v-model="InfoData.confirm_password"
           />
+          <p class="mt-3">Gender</p>
+          <input
+            type="text"
+            class="border-2 border-[#F7931E] md:w-[460px] w-full py-1 px-2"
+            v-model="InfoData.gender"
+          />
         </div>
         <router-link to="/signup">
           <button
@@ -105,6 +111,7 @@ const InfoData = ref({
   password: "",
   confirm_password: "",
   phone: "",
+  gender: "",
 });
 
 const router = useRouter();
