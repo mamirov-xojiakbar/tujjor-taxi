@@ -116,9 +116,9 @@ async function submitForm() {
     const result = formData.value.phone.replace(/\s+/g, "");
     formData.value.phone = result;
 
-    console.log(formData.value.phone);
+    console.log('fds',formData.value.phone);
     const response = await axios.post(
-      "http://45.130.148.194:7777/api/client/newotp",
+      "http://45.130.148.194:5050/api/client/newsotp",
       formData.value
     );
     responseData.value = response.data;
@@ -140,7 +140,7 @@ async function submitCode() {
     console.log(`sdas`, CodeData.value);
 
     const res = await axios.post(
-      "http://45.130.148.194:7777/api/client/checkOtp",
+      "http://45.130.148.194:5050/api/client/checkOtp",
       CodeData.value
     );
     console.log(`res`, res);
@@ -158,7 +158,7 @@ async function InfoCode() {
     InfoData.value.phone = result;
 
     const res = await axios.post(
-      "http://45.130.148.194:7777/api/client/register",
+      "http://45.130.148.194:5050/api/client/register",
       InfoData.value
     );
     store.userInfo = res.data.user;
