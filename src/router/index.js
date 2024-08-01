@@ -34,6 +34,11 @@ const router = createRouter({
           name: "zakaz",
           component: () => import("../pages/zakaz.vue"),
         },
+        {
+          path: "/driver",
+          name: "driver",
+          component: () => import("../pages/driver.vue"),
+        },
       ],
     },
 
