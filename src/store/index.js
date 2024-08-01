@@ -8,6 +8,7 @@ export const useStore = defineStore("store", {
       setPlacePinTo: null,
       setDatePin: null,
       userInfo: null,
+      driverInfo: null,
       lang: "uz",
       regClick: false,
       location: true,

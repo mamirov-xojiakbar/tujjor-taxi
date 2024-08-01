@@ -1,6 +1,8 @@
 <template>
   <div class="bg-gray-100 h-screen pt-2">
-    <div class="md:w-[510px] mx-auto bg-white shadow-sm max-md:mx-2 max-md:px-3 py-8">
+    <div
+      class="md:w-[510px] mx-auto bg-white shadow-sm max-md:mx-2 max-md:px-3 py-8"
+    >
       <div class="md:w-[460px] mx-auto">
         <div class="flex justify-end">
           <svg
@@ -38,7 +40,9 @@
             v-model="code"
             v-mask="'####'"
           />
-          <h2 v-if="isVerifyError" class="text-red-500">Kod xato, qaytadan kiriting!</h2>
+          <h2 v-if="isVerifyError" class="text-red-500">
+            Kod xato, qaytadan kiriting!
+          </h2>
         </div>
         <div v-if="step === 3">
           <p class="mt-3">Ism</p>
@@ -126,6 +130,9 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useStore } from "../../store";
+
+const store = useStore();
 
 const step = ref(1);
 const code = ref("");
@@ -139,7 +146,7 @@ const infoData = ref({
   password: "",
   photo: null,
   prava: null,
-  phone: ""
+  phone: "",
 });
 const showPassword = ref(false);
 
@@ -160,7 +167,10 @@ const handlePravaUpload = (event) => {
 
 const submitForm = async () => {
   try {
-    const response = await axios.post("http://45.130.148.194:5050/api/driver/newotp", formData.value);
+    const response = await axios.post(
+      "http://45.130.148.194:5050/api/driver/newotp",
+      formData.value
+    );
     responseData.value = response.data;
     alert(responseData.value.otp);
     step.value = 2;
@@ -172,7 +182,10 @@ const submitForm = async () => {
 const submitCode = async () => {
   try {
     const codeData = { check: formData.value.phone, otp: +code.value };
-    await axios.post("http://45.130.148.194:5050/api/driver/checkOtp", codeData);
+    await axios.post(
+      "http://45.130.148.194:5050/api/driver/checkOtp",
+      codeData
+    );
     step.value = 3;
   } catch (error) {
     isVerifyError.value = true;
@@ -189,10 +202,16 @@ const submitInfo = async () => {
       formDataToSend.append(key, infoData.value[key]);
     }
 
-    await axios.post("http://45.130.148.194:5050/api/driver/register", formDataToSend, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
+    const res = await axios.post(
+      "http://45.130.148.194:5050/api/driver/register",
+      formDataToSend,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    store.driverInfo = res.data.driver;
     router.push({ name: "home" });
+    console.log(store.driverInfo);
   } catch (error) {
     console.error("Xato yuz berdi:", error);
   }
