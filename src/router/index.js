@@ -9,7 +9,7 @@ const router = createRouter({
     //   component: () => import("../pages/not-found.vue"),
     // },
 
-    { 
+    {
       path: "/",
       component: () => import("../layout/default.vue"),
       redirect: "/home",
