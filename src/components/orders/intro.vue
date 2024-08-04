@@ -90,6 +90,7 @@ import "swiper/css/pagination";
 
 // import required modules
 import { Pagination } from "swiper/modules";
+import axios from "axios";
 
 const modules = [Pagination];
 
@@ -126,6 +127,17 @@ const optionLabels = computed(() => [
   languageStore.isRussian ? "Название маршрута" : "Yo‘nalish nomi",
   languageStore.isRussian ? "Цена (сом)" : "Narxi(so‘m)"
 ]);
+
+async function getOrder(){
+  try {
+    
+    const order = await axios.get("http://45.130.148.194:5050/api/taxi-order")
+  } catch (error) {
+    console.log(error);
+  }
+
+
+}
 
 const optionsAllData = ref([
   {

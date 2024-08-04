@@ -201,8 +201,6 @@ const zakazInfo = reactive({
   clientId: store.userInfo.id,
   count: count.value,
   price: "",
-  // Muqobil qiymat
-  status: "new",
 });
 
 async function createZakaz() {
