@@ -72,7 +72,7 @@ const router = useRouter();
 
 async function Login() {
   try {
-    console.log(loginData.value);
+    // console.log(loginData.value);
     const res = await axios.post(
       "http://45.130.148.194:5050/api/driver/login",
       loginData.value

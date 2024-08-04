@@ -1,7 +1,7 @@
 <template>
   <div class="bg-[#F2F2F2] h-screen">
     <div class="pt-[100px] container">
-      <div class="flex justify-between mt-10">
+      <div class="md:flex justify-between mt-10">
         <div class="flex">
           <router-link to="/">
             <button
@@ -12,7 +12,7 @@
           </router-link>
           <h1 class="ml-10 text-[26px] font-bold">Buyurtma</h1>
           <input
-            class="border border-[#F7931E] ml-4 w-[200px] px-2"
+            class="ml-4 md:w-[200px] px-2 w-full"
             type="text"
             placeholder="Buyurta vaqti"
             :value="store.setDatePin"
@@ -38,7 +38,7 @@
       </div>
 
       <div
-        class="grid grid-cols-3 bg-white h-[400px] mt-11 border border-[#F7931E] border-b-0 gap-11 px-10 rounded-t-2xl"
+        class="md:grid grid-cols-3 bg-white h-[400px] mt-11 border border-[#F7931E] border-b-0 gap-11 px-10 rounded-t-2xl"
       >
         <div>
           <p class="mt-3">Ism</p>
@@ -93,27 +93,41 @@
           </button>
         </div>
         <Location></Location>
-        <textarea name="text" id="text" class=" border mb-[30%] p-3 border-[#F7931E]"></textarea>
+        <div>
+          <p class="mt-3">Narx</p>
+          <input
+            type="text"
+            class="border-2 border-[#F7931E] w-full py-1 px-2 rounded-xl"
+            v-model="zakazInfo.price"
+          />
+        </div>
+        <textarea
+          name="text"
+          id="text"
+          class="border mb-[60%] p-3 border-[#F7931E] max-md:mt-4"
+          v-model="zakazInfo.description"
+        ></textarea>
       </div>
     </div>
     <div class="bg-white h-[90px]" style="box-shadow: 0 0 4px 0 gray">
-      <div class="container py-3 flex gap-5">
-        <div class="flex shadow-xl gap-8 items-center">
+      <div class="container py-3 md:flex gap-5">
+        <div class="md:flex md:shadow-xl gap-8 items-center">
           <div>
             <p class="text-[#F7931E]">qayerdan</p>
             <p class="text-[22px]">{{ store.setPlacePinFrom }}</p>
           </div>
-          <div>
+          <div class="max-md:hidden">
             <p class="text-[#F7931E]">-></p>
           </div>
-          <div>
+          <div class="max-md:mt-8">
             <p class="text-[#F7931E]">qayerga</p>
             <p class="text-[22px]">{{ store.setPlacePinTo }}</p>
           </div>
         </div>
         <div>
           <button
-            class="px-6 py-4 border text-[18px] bg-[#F7931E] text-white rounded-xl"
+            class="px-6 py-4 border text-[18px] bg-[#F7931E] text-white rounded-xl max-md:mt-4 max-md:mx-auto"
+            @click="createZakaz()"
           >
             Tasdiqlash
           </button>
@@ -124,21 +138,105 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
+import axios from "axios";
 
 import { useStore } from "../store";
 import Location from "../components/location.vue";
 
 const store = useStore();
-console.log(store.userInfo);
-
 const count = ref(1);
+
+async function getDiscrictFrom(name) {
+  try {
+    name = name.trim()
+    const res = await axios.get("http://45.130.148.194:5050/api/districts");
+    const districts = res.data;
+    // console.log(districts[1].name);
+    // console.log(name);
+    console.log(districts[1].name == name);
+    for (const [index, district] of districts.entries()) {
+      // console.log(district.name);
+      // console.log(name);
+      // console.log(district.name[1] == name);
+      if (district.name == name) {
+        store.setPlaceFromIndex = index;
+        return index;
+      }
+    }
+    // throw new Error("Tuman topilmadi");
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+async function getDiscrictTo(name) {
+  try {
+    name = name.trim();
+    const res = await axios.get("http://45.130.148.194:5050/api/districts");
+    // console.log("asxas",res.data[0].name);
+    const districts = res.data;
+    for (const [index, district] of districts.entries()) {
+      // console.log(district.name);
+      if (district.name === name) {
+        // console.log(index);
+        store.setPlaceFromIndexTo = index;
+        return index;
+      }
+    }
+    // throw new Error("Tuman topilmadi");
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+const zakazInfo = reactive({
+  date: store.setDatePin,
+  description: "",
+  location_start: store.letlang,
+  from_distinct_id: 0,
+  to_distinct_id: 0,
+  clientId: store.userInfo.id,
+  count: count.value,
+  price: "",
+  // Muqobil qiymat
+  status: "new",
+});
+
+async function createZakaz() {
+  try {
+    const nameFrom = store.setPlacePinFrom.split(".")[1];
+    const nameTo = store.setPlacePinTo.split(".")[1];
+    // console.log(nameFrom, nameTo);
+
+    zakazInfo.from_distinct_id = await getDiscrictFrom(nameFrom);
+    zakazInfo.to_distinct_id = await getDiscrictTo(nameTo);
+
+    // if (!zakazInfo.price || isNaN(Number(zakazInfo.price))) {
+    //   throw new Error("Narx noto'g'ri formatda");
+    // }
+
+    // if (!zakazInfo.driverId || isNaN(Number(zakazInfo.driverId))) {
+    //   throw new Error("Driver ID noto'g'ri formatda");
+    // }
+    console.log(zakazInfo);
+    await axios.post("http://45.130.148.194:5050/api/taxi-order", zakazInfo);
+    console.log("Zakaz qabul qilindi");
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+}
 
 function increment() {
   if (count.value < 4) count.value++;
+  zakazInfo.count = count.value;
 }
+
 function decrement() {
   if (count.value > 1) count.value--;
+  zakazInfo.count = count.value;
 }
 </script>
 

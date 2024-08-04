@@ -88,6 +88,8 @@ const loadRegions = async () => {
   }
 };
 
+
+
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
 };

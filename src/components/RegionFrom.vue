@@ -96,6 +96,11 @@ const loadRegions = async () => {
     console.error("Error fetching regions data:", error);
   }
 };
+// async function getOrders(){
+//   const orders = await axios.get("http://45.130.148.194:5050/api/taxi-order")
+//   console.log(orders.data)
+// }
+// getOrders();
 
 // Watch for changes in store.lang and reload regions accordingly
 watch(() => store.lang, loadRegions, { immediate: true });
