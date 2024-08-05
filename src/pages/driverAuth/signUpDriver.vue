@@ -118,7 +118,7 @@
         >
           Ro’yxatdan o’tish
         </button>
-        <router-link to="/login">
+        <router-link to="/loginDriver">
           <button class="mt-2">Ro‘yxatdan o‘tganmisiz?</button>
         </router-link>
       </div>
@@ -210,7 +210,7 @@ const submitInfo = async () => {
       }
     );
     store.driverInfo = res.data.driver;
-    router.push({ name: "home" });
+    router.push({ name: "orders" });
     console.log(store.driverInfo);
   } catch (error) {
     console.error("Xato yuz berdi:", error);

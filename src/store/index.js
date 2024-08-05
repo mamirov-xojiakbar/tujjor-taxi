@@ -6,6 +6,8 @@ export const useStore = defineStore("store", {
       carType: 2,
       setPlacePinFrom: null,
       setPlacePinTo: null,
+      setPlaceFromIndex: null,
+      setPlaceFromIndexTo: null,
       setDatePin: null,
       userInfo: null,
       driverInfo: null,
