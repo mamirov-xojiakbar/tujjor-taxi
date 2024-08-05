@@ -86,7 +86,7 @@
     </div>
 
     <div v-if="activeTab === 3">
-      Buyurtmalar tarixi
+      <OrderXistory />
     </div>
   </div>
 </template>
@@ -95,6 +95,7 @@
 import { ref, onMounted, nextTick } from 'vue';
 import DriverOrders from '../components/driver-profile/driver-orders.vue';
 import DriverCars from '../components/driver-profile/driver-cars.vue';
+import OrderXistory from '../components/driver-profile/order-xistory.vue';
 
 const activeTab = ref(1);
 const driverInfo = ref({});

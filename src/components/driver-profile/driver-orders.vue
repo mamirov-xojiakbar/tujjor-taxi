@@ -9,14 +9,14 @@
         <p class="mt-[20px] font-semibold text-red-500 text-[15px]">Orders not found...</p>
       </div>
 
-      <router-link
-        to="#"
+      <div
         v-else
         v-for="order in filteredOrders"
         :key="order.id"
-        class="bg-gray-200 py-4 px-[50px] mb-4 rounded-lg shadow-md grid grid-cols-5 items-center"
+        :class="['py-4', 'px-[50px]', 'mb-4', 'rounded-lg', 'shadow-md', 'items-center', 'flex']"
       >
-        <div>
+        <router-link to="/order-details" class="grid grid-cols-4 w-full items-center">
+          <div>
           <p class="font-normal text-[#F7931E] text-[20px]">{{ getRegionName(order.fromDistrict.region_id) }}</p>
           <p class="font-normal text-[24px]">{{ order.fromDistrict.name }}</p>
         </div>
@@ -36,13 +36,13 @@
             <p class="font-normal text-[18px]">{{ order.count }}</p>
           </div>
         </div>
-        <p class="bg-red-500 text-white px-[20px] py-[10px] w-[140px] rounded-[5px] text-center">{{ order.status }}</p>
-      </router-link>
+        </router-link>
+        <button @click.stop.prevent="updateOrderStatus(order)" class="bg-red-500 text-white px-[20px] py-[10px] w-[140px] rounded-[5px] text-center" :class="[getOrderBgColor(order.status)]">{{ order.status }}</button>
+      </div>
     </div>
   </div>
 </template>
 
-  
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
@@ -85,16 +85,43 @@ onMounted(async () => {
 });
 
 const filteredOrders = computed(() => {
-  return driverId ? orders.value.filter(order => order.driverId === driverId) : [];
+  return driverId ? orders.value.filter(order => order.driverId === driverId && order.status !== 'Arrived') : [];
 });
 
 const getRegionName = (regionId) => {
   const region = regions.value.find(r => r.id === regionId);
   return region ? region.name : 'Unknown';
 };
+
+const getOrderBgColor = (status) => {
+  switch (status) {
+    case 'On way':
+      return 'bg-yellow-200';
+    case 'Arrived':
+      return 'bg-green-200';
+    default:
+      return 'bg-gray-200';
+  }
+};
+
+const updateOrderStatus = async (order) => {
+  let newStatus;
+  if (order.status === 'Accepted') {
+    newStatus = 'On way';
+  } else if (order.status === 'On way') {
+    newStatus = 'Arrived';
+  }
+
+  if (newStatus) {
+    try {
+      await axios.patch(`http://45.130.148.194:5050/api/taxi-order/${order.id}`, { status: newStatus });
+      order.status = newStatus;
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  }
+};
 </script>
 
-  
 <style scoped>
 </style>
-  

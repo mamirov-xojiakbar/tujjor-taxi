@@ -25,10 +25,8 @@
           <p class="md:block hidden">Русский</p>
           <p class="md:hidden block">Рус</p>
         </div> 
-        <router-link to="#">
-          <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 512 512">
-            <path fill="white" d="M256 288a144 144 0 1 0 0-288a144 144 0 1 0 0 288m-94.7 32C72.2 320 0 392.2 0 481.3c0 17 13.8 30.7 30.7 30.7h450.6c17 0 30.7-13.8 30.7-30.7c0-89.1-72.2-161.3-161.3-161.3z"/>
-          </svg>
+        <router-link to="/driver">
+          <img v-if="driverInfo && driverInfo.photo" :src="driverInfo.photo" alt="Driver Photo" class="w-8 h-8 rounded-full object-cover  "/>
         </router-link>
       </div>
     </div>
@@ -39,10 +37,14 @@
 import { computed } from 'vue';
 import { useLanguageStore } from '../store/languageStore';
 
+// Retrieve driverInfo from local storage
+const store = JSON.parse(localStorage.getItem('store'));
+const driverInfo = store ? store.driverInfo : null;
+console.log('driverInfo:', driverInfo); // Add this line to check the output in the console
+
 const languageStore = useLanguageStore();
 
 const isToggled = computed(() => languageStore.isRussian);
-
 
 const toggleLanguage = () => {
   languageStore.toggleLanguage();
