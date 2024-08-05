@@ -39,6 +39,11 @@ const router = createRouter({
           name: "driver",
           component: () => import("../pages/driver.vue"),
         },
+        {
+          path: "/order-details",
+          name: "order-details",
+          component: () => import("../pages/order-details.vue"),
+        },
       ],
     },
 
