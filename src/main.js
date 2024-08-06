@@ -5,6 +5,7 @@ import VueTheMask from "vue-the-mask";
 import {createPinia} from "pinia"
 import i18n from "./plugins/i18n";
 import YmapPlugin from "vue-yandex-maps";
+import notiwind from 'notiwind'
 
 
 
@@ -34,6 +35,7 @@ pinia.use(piniaPluginPersistedstate);
 app.use(i18n);
 app.use(YmapPlugin, settings);
 
+app.use(notiwind)
 app.use(VCalendar, {});
 app.use(router);
 app.use(pinia);
